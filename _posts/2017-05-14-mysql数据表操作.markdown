@@ -1,0 +1,87 @@
+---
+layout: post
+title:  "mysql数据表操作"
+date:   2017-05-14 20:16:34 +0800
+categories: jekyll update
+---
+
+### mysql 表操作
+
+#### 创建数据表
+``` sql
+GREATE TABLE [IF NOT EXISTS] table_name(
+	column_name data_type,
+	...
+)
+```
+如果数据表存在加上了`IF NOT EXISTS`系统将不提示错误。
+
+#### 查看数据表列表
+``` sql
+SHOW TABLES [FROM db_name]
+```
+
+#### 查看数据表结构
+``` sql
+SHOW COLUMNS FROM tbl_name
+```
+或者
+``` sql
+DESC tbl_name
+```
+
+#### mysql的插入与查找
+插入
+``` sql
+INSERT [INTO] tab_name[(col_name,...)] VALUES(val,...)
+```
+查找
+``` sql 
+SELECT expr,... FROM tbl_name
+```
+
+#### mysql空值与非空
+- NULL  字段可以为空
+- NOT NULL  字段值禁止为空
+
+#### mysql 自动编号 AUTO_INCREMENT
+- 自动编号，且必须与主键组合使用
+- 默认情况下，起始值为1，每次的增量为1
+- AUTO_INCREMENT 必须和主键一起使用
+
+####主键 PRIMARY KEY
+- 主键约束
+- 每张数据表只能存在一个主键
+- 主键保证记录的唯一性
+- 主键自动为NOT NULL
+``` sql 
+CREATE TABLE tb1(
+	t_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(30) NOT NULL
+);
+```
+
+#### 唯一约束  UNIQUE KEY
+- 唯一约束
+- 唯一约束可以保证记录的唯一性
+- 唯一约束的字段可以为空值（NULL）
+- 每张数据表可以存在多个唯一约束
+``` sql 
+CREATE TABLE tb1(
+	t_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(30) NOT NULL UNIQUE KEY
+);
+```
+
+#### 默认约束 DEFAULT
+- 默认值
+- 当插入记录时，如果没有明确为字段赋值，则自动赋予默认值。  
+
+``` sql 
+CREATE TABLE tb1(
+	t_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(30) NOT NULL UNIQUE KEY，
+	sex ENUM('1','2','3') DEFAULT '3'
+);
+```
+
