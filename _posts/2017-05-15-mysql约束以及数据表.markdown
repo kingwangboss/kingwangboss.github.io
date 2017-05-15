@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "mysql 约束以及数据表"
+date:   2017-05-15 23:24:34 +0800
+categories: jekyll update
+---
+
+### mysql 约束以及数据表
+
+- 1.约束保证数据的完整性和一致性。
+- 2.约束分为表级约束和列级约束。
+- 3.约束类型包括：
+		- NOT NULL (非空约束)
+		- PRIMARY KEY (主键约束)
+		- UNIQUE KEY (唯一约束)
+		- DEFAULT (默认约束)
+		- FOREIGN KEY (外键约束)
+
+####mysql外键约束的要求解析(FOREIGN KEY)
+**保持数据一致性，完整性。**
+**实现一对一或一对多关系。**
+
+- 1.父表和子表必须使用相同的存储引擎，而且禁止使用临时表。
+- 2.数据表的存储引擎只能为InnoDB。
+- 3.外键列和参照列必须具有相似的数据类型。其中数字的长度或是否有符号位必须相同；而字符的长度则可以不同。
+- 4.外键列和参照列必须创建索引。如果外键列不存在索引的话MySQL将自动创建索引。
+
+**编辑数据表的默认存储引擎**
+mysql配置文件
+`default-storage-engine=INNODB`
+
+创建外键约束示例：
+创建省份表
+``` sql
+CREATE TABLE provinces(
+	id SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	pname VARCHAR(20) NOT NULL
+);
+```
+查看原来的创建命令
+``` sql
+SHOW CREATE TABLE provinces;
+```
+创建用户表
+``` sql
+CREATE TABLE users(
+	id SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	username VARCHAR(10) NOT NULL,
+	pid SMALLINT UNSIGNED,
+	FOREIGN KEY (pid) REFERENCES provinces (id)
+);
+```
+查看索引
+`SHOW INDEXES FROM provinces\G;`
+
+#### mysql外键约束的参照操作
+- 1.CASCADE：从父表删除或更新且自动删除或更新子表中匹配的行。
+- 2.SET NULL：从父表删除或更新行，并设置子表中的外键列。
+- 3.RESTRICT：拒绝对父表的删除或更新操作。
+- 4.NO ACTION：标准SQL的关键字，在mysql中与RESTRICT相同。
+
+#### mysql 表级约束与列级约束
+对一个数据列建立的约束，称为列级约束。
+对多个数据列建立的约束，称为表级约束。
+列级约束既可以在列定义时声明，也可以在列定义后声明。
+表级约束只能在列定义后声明。
+
+#### mysql 修改数据表-添加/删除列
+数据表的修改，无非就列的增加，列的删除，约束的添加，约束的删除 
+**添加单列**
+`ALTER TABLE tabl_name ADD [COLUMN] col_name column_definition [FIRST|AFTER col_name]`
+[COLUMN]可以不加，然后写上列定义（column_definition）, [FIRST|AFTER col_name]，
+FIRST指的是你加入的这个列插入到最前面，AFTER col_name 是指你加入的这个列在col_name这个列的后面。如果省略的FIRST 和AFTER 加入的列将位于所有列的最下面。
+如：
+`ALRER TABLE user ADD password VARCHAR(32) NOT NULL AFTER username;`
+
+**添加多列**
+`ALTER TABLE tbl_name ADD [COLUMN] (col_name column_definition,...);`
+
+**删除列**
+`ALTER TABLE tbl_name DROP [COLUMN] col_name;`
+
+#### mysql 修改数据表-添加约束
+
