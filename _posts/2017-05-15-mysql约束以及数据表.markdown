@@ -82,3 +82,89 @@ FIRST指的是你加入的这个列插入到最前面，AFTER col_name 是指你
 
 #### mysql 修改数据表-添加约束
 
+
+**添加主键约束**
+`ALTER TABLE tab_name ADD [CONSTRAINT[symbol]] PRIMARY KEY [index_type] (index_col_name,...)`
+
+示例：
+创建一个表（没有主键）
+``` sql 
+CREATE TABLE USER (
+username VARCHAR(10) NOT NULL,
+pid SMALLINT UNSIGNED,
+id SMALLINT UNSIGNED,
+);
+```
+
+给这个表id添加一个主键
+CONSTRAINT可以省略（如果加上是给主键一个别名）
+``` sql
+ALTER TABLE user ADD CONSTRAINT PK_user_id PRIMARY KEY (id);
+```
+
+给这个表username添加一个唯一约束
+``` sql 
+ALTER TABLE username ADD UNIQUE (username);
+```
+
+**添加外键约束**
+`ALTER TABLE tab_name ADD [CONSTRAINT[symbol]] FOREIGN KEY [index_name] (index_col_name,...) reference_definition`
+
+创建user2表
+
+``` sql
+CREATE TABLE user2(
+id SMALLINT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+pname VARCHAR(20) NOT NULL
+);
+```
+
+给user的（pid）字段添加一个外键约束
+
+``` sql 
+ALTER TABLE user ADD FOREIGN KEY(pid) REFERENCES user2 (id);
+```
+
+**添加/删除默认约束**
+`ALTER TABLE tbl_mane ALTER [COLUMN] col_name {SET DEFAULT literal | DROP DEFAULT}`
+
+示例：
+创建user表
+``` sql 
+CREATE TABLE user(
+age TINYINT(3) UNSIGNED NOT NULL	
+);
+```
+
+给user表添加默认约束
+```sql
+ALTER TABLE user ALTER age SET DEFAULT 15;
+```
+删除user表的默认约束
+```sql
+ALTER TABLE user ALTER age DROP DEFAULT;
+```
+
+####mysql修改数据表--删除约束
+
+**删除主键约束**
+`ALTER TABLE tbl_name DROP PRIMARY KEY;`
+
+**删除唯一约束**
+`ALTER TABLE tbl_name DROP {INDEX|KEY} index_name;`
+
+**删除外键约束**
+`ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol`
+
+**修改列定义**
+`ALTER TABLE tbl_name MODIFY [COLUMN] col_name column_definition [FIRST | AFTER col_name]`
+
+**修改列名称**
+`ALTER TABLE tbl_name CHANGE [COLUMN] old_col_name new_col_name column_definition [FIRST | AFTER col_name]`
+
+**修改数据表名字**
+方法1：
+`ALTER TABLE tbl_name RENAME [TO|AS] new_tbl_name`
+
+方法2：
+`RENAME TABLE tbl_name TO new_tbl_name [,tbl_name2 to new_tbl_name2]...`
